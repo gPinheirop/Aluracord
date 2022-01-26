@@ -1,34 +1,9 @@
+import React from 'react';
+import {useRouter} from 'next/router';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import appConfig from '../config.json';
 
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: 'Open Sans', sans-serif;
-      }
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-  );
-}
+
 
 function Titulo(props) {
   const Tag = props.tag || 'h1';
@@ -60,11 +35,13 @@ function Titulo(props) {
 // export default HomePage
 
 export default function PaginaInicial() {
-  const username = 'peas';
+  // const username = 'peas';
+  const [username, setUsername]= React.useState('');
+  const [mainButtonColor, setMainButtonColor] = React.useState(appConfig.theme.colors.primary[500])
+  const roteamento = useRouter();
 
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -91,6 +68,16 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
+            onSubmit={function(e){
+              if(mainButtonColor === 'red'){
+                e.preventDefault();
+                alert('Numero de caracteres insuficientes')
+              }else{
+                console.log('foi')
+                e.preventDefault();
+                roteamento.push('/chat')
+              }
+            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -101,8 +88,34 @@ export default function PaginaInicial() {
               {appConfig.name}
             </Text>
 
+            {/* <input
+              type={'text'}
+              value={username}
+              onChange={function (event){
+                console.log('usuario digitou', event.target.value);
+                //onde está o valor?
+                const valor = event.target.value;
+                //trocar o valor da variavel
+                //usando o react avisando quem precisa ser avisado
+                setUsername(valor);
+              }}
+            /> */}
+
             <TextField
               fullWidth
+              value={username}
+              onChange={function (event){
+                //onde está o valor?
+                const valor = event.target.value;
+                //trocar o valor da variavel
+                //usando o react avisando quem precisa ser avisado
+                if (valor.length <= 2 && valor.length > 0){
+                  setMainButtonColor('red')
+                }else{
+                  setMainButtonColor(appConfig.theme.colors.primary[500])
+                }
+                setUsername(valor);
+              }}
               textFieldColors={{
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
@@ -118,7 +131,7 @@ export default function PaginaInicial() {
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                mainColor: appConfig.theme.colors.primary[500],
+                mainColor: mainButtonColor,
                 mainColorLight: appConfig.theme.colors.primary[400],
                 mainColorStrong: appConfig.theme.colors.primary[600],
               }}
