@@ -73,7 +73,6 @@ export default function PaginaInicial() {
                 e.preventDefault();
                 alert('Numero de caracteres insuficientes')
               }else{
-                console.log('foi')
                 e.preventDefault();
                 roteamento.push('/chat')
               }
@@ -85,7 +84,7 @@ export default function PaginaInicial() {
           >
             <Titulo tag="h2">Boas vindas de volta!</Titulo>
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
-              {appConfig.name}
+              {`${appConfig.name} ${username}`}
             </Text>
 
             {/* <input
@@ -129,6 +128,7 @@ export default function PaginaInicial() {
               type='submit'
               label='Entrar'
               fullWidth
+              // implementar o disable
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
                 mainColor: mainButtonColor,
