@@ -1,6 +1,15 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js';
+// Dados do supabase
+const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzM3NjQzOSwiZXhwIjoxOTU4OTUyNDM5fQ.MiPNlNnx_ujj8Gty47itWJacznFgKqDtvtftOgu7ZLo';
+
+const SUPABASE_URL = 'https://towhymiwrgmnzbszfeqk.supabase.co';
+
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Dados do supabase
 
 
 export default function ChatPage() {
@@ -8,24 +17,40 @@ export default function ChatPage() {
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([])
 
+    React.useEffect(() => {       
+        supabaseClient  
+            .from('mensagens')
+            .select('*')
+            .order('id', {ascending :false})
+            .then(({ data }) =>{
+                console.log('dados da consulta:', data);
+                setListaDeMensagens(data);
+  });
+    },[])
+
     function handleNovaMensagem(novaMensagem){
         const mensagem = {
-            id: listaDeMensagens.length,
+            // id: listaDeMensagens.length,
             autor: 'gPinheirop',
             texto:novaMensagem,
         }
 
-        setListaDeMensagens([
-            mensagem,
-            ...listaDeMensagens,
-        ]);
+        supabaseClient
+        .from('mensagens')
+        .insert([
+            mensagem
+        ])
+        .then(({data})=>{
+            // console.log('criando mensagem', resposta)
+            setListaDeMensagens([
+                data[0],
+                ...listaDeMensagens,
+            ]);
+        })
+
+        
         setMensagem('');
     }
-
-    // function HandleDeleteMensagem(id){
-    //     const mensagemApagada = listaDeMensagens.filter((mensagemEscolhida) => mensagemEscolhida.id!==id);
-    //     setListaDeMensagens(mensagemApagada);
-    // }
 
     // ./Sua lógica vai aqui
     return (
@@ -66,7 +91,10 @@ export default function ChatPage() {
                     }}
                 >
                     
-                    <MessageList mensagens={listaDeMensagens} />
+                    <MessageList 
+                        listaDeMensagens={listaDeMensagens}
+                        setListaDeMensagens={setListaDeMensagens}
+                    />
                     {/* {listaDeMensagens.map((mensagemAtual)=>{
                         return(
                             <li key={mensagemAtual.id}>
@@ -147,7 +175,13 @@ function Header() {
     )
 }
 
-function MessageList(props) {
+function MessageList({listaDeMensagens, setListaDeMensagens}) {
+
+    function handleDeleteMensagem(id){
+        const listaAtualizada = listaDeMensagens.filter((mensagem)=> mensagem.id !==id);
+         setListaDeMensagens(listaAtualizada);
+    }
+
     return (
         <Box
             tag="ul"
@@ -160,7 +194,7 @@ function MessageList(props) {
                 marginBottom: '16px',
             }}
         >
-        {props.mensagens.map((mensagem) => {
+        {listaDeMensagens.map((mensagem) => {
             return(
                 <Text
                     key={mensagem.id}
@@ -188,7 +222,7 @@ function MessageList(props) {
                             display: 'inline-block',
                             marginRight: '8px',
                         }}
-                        src={`https://github.com/gPinheirop.png`}
+                        src={`https://github.com/${mensagem.autor}.png`}
                     />
                     <Text tag="strong">
                         {mensagem.autor}
@@ -203,15 +237,15 @@ function MessageList(props) {
                     >
                         {(new Date().toLocaleDateString())}
                     </Text>
-                    {/* <Button
+                    <Button
                         label='X'
                         variant="tertiary"
                         type='button'
                         colorVariant='neutral'
                         onClick={()=>{
-                            // HandleDeleteMensagem
+                            handleDeleteMensagem(mensagem.id)
                         }}
-                    /> */}
+                    />
                 </Box>
                 {mensagem.texto}
             </Text>

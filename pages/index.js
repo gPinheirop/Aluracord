@@ -3,8 +3,6 @@ import {useRouter} from 'next/router';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import appConfig from '../config.json';
 
-
-
 function Titulo(props) {
   const Tag = props.tag || 'h1';
   return (

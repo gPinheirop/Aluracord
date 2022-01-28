@@ -7,6 +7,9 @@ function GlobalStyle() {
           box-sizing: border-box;
           list-style: none;
         }
+        ::-webkit-scrollbar {
+          display: none;
+        }
         body {
           font-family: 'Open Sans', sans-serif;
         }
