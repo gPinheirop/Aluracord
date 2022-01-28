@@ -22,9 +22,10 @@ export default function ChatPage() {
         setMensagem('');
     }
 
-    function HandleDeleteMensagem(novaMensagem){
-
-    }
+    // function HandleDeleteMensagem(id){
+    //     const mensagemApagada = listaDeMensagens.filter((mensagemEscolhida) => mensagemEscolhida.id!==id);
+    //     setListaDeMensagens(mensagemApagada);
+    // }
 
     // ./Sua lógica vai aqui
     return (
@@ -202,7 +203,7 @@ function MessageList(props) {
                     >
                         {(new Date().toLocaleDateString())}
                     </Text>
-                    <Button
+                    {/* <Button
                         label='X'
                         variant="tertiary"
                         type='button'
@@ -210,7 +211,7 @@ function MessageList(props) {
                         onClick={()=>{
                             // HandleDeleteMensagem
                         }}
-                    />
+                    /> */}
                 </Box>
                 {mensagem.texto}
             </Text>
