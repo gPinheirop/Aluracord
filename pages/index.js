@@ -36,6 +36,7 @@ export default function PaginaInicial() {
   // const username = 'peas';
   const [username, setUsername]= React.useState('');
   const [mainButtonColor, setMainButtonColor] = React.useState(appConfig.theme.colors.primary[500])
+  
   const roteamento = useRouter();
 
   return (
@@ -72,7 +73,7 @@ export default function PaginaInicial() {
                 alert('Numero de caracteres insuficientes')
               }else{
                 e.preventDefault();
-                roteamento.push('/chat')
+                roteamento.push(`/chat?username=${username}`)
               }
             }}
             styleSheet={{
